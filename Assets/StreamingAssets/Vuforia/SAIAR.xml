@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="TierparkKarteGross" size="1.750000 1.275564" />
+    <ImageTarget name="minimap" size="0.100000 0.143021" />
+    <ImageTarget name="katta" size="0.150000 0.100086" />
+    <ImageTarget name="tierpark" size="0.300000 0.212260" />
+  </Tracking>
+</QCARConfig>
