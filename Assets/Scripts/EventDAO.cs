@@ -51,9 +51,32 @@ namespace DataBank {
             dbcmd.ExecuteNonQuery();
         }
 
+        public override void deleteDataById(int id)
+        {
+            IDbCommand dbcmd = getDbCommand();
+            dbcmd.CommandText =
+                "DELETE FROM " + TABLE_NAME + " WHERE " + KEY_ID + " = '" +
+                id + "'";
+            dbcmd.ExecuteNonQuery();
+           
+        }
+
+        public override void deleteAllData()
+        {
+            base.deleteAllData(TABLE_NAME);
+        }
         public override IDataReader getAllData()
         {
             return base.getAllData(TABLE_NAME);
+        }
+
+        public override IDataReader getDataByID(int id)
+        {
+            IDbCommand dbcmd = getDbCommand();
+            dbcmd.CommandText =
+                "SELECT * FROM " + TABLE_NAME + "WHERE " + KEY_ID +
+                " = '" + id + "' )";
+            return dbcmd.ExecuteReader();
         }
 
         public override IDataReader getDataByName(string Name)
@@ -64,5 +87,11 @@ namespace DataBank {
                 " = '" + Name + "' )";
             return dbcmd.ExecuteReader();
         }
+
+        public static Event getEventfromReader(IDataReader reader)
+        {
+            return new Event(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(),reader[5].ToString());
+        }
+      
     }
 }

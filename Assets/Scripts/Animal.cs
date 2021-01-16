@@ -1,22 +1,59 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Animal
 {
+    private int id;
     private string name;
     private Material picture;
     private string discription;
     private string pictureName;
-    private string enclosureName;
+    private int number;
+    private Enclosure enclosureName;
     private Clue[] clues;
 
-    public Animal(string name, string pictureName, string discription, Clue[] clues)
+    public Animal(int id, string name, string pictureName, string discription, int number, Enclosure enclosure)
     {
+        this.id = id;
         this.Name = name;
         this.Picture = Resources.Load<Material>(pictureName);
         this.Discription = discription;
-        this.Clues = clues;
+        this.number = number;
+        enclosureName = enclosure;
+        
+    }
+
+    public Animal(int id, string name, string discription, string pictureName, int number)
+    {
+        this.id = id;
+        this.name = name;
+        this.discription = discription;
+        this.pictureName = pictureName;
+        this.Picture = Resources.Load<Material>(pictureName);
+        this.number = number;
+    }
+
+    public Animal(string id, string name, string pictureName, string discription, string number, Enclosure enclosure)
+    {
+        this.id = Int32.Parse(id);
+        this.name = name;
+        this.Picture = Resources.Load<Material>(pictureName);
+        this.discription = discription;
+        this.pictureName = pictureName;
+        this.number = Int32.Parse(number);
+        this.enclosureName = enclosure;
+    }
+
+    public Animal(string id, string name, string pictureName, string discription, string number)
+    {
+        this.id = Int32.Parse(id);
+        this.name = name;
+        this.Picture = Resources.Load<Material>(pictureName);
+        this.discription = discription;
+        this.pictureName = pictureName;
+        this.number = Int32.Parse(number);
     }
 
     public string Name { get => name; set => name = value; }
@@ -24,7 +61,9 @@ public class Animal
     public string Discription { get => discription; set => discription = value; }
     public Clue[] Clues { get => clues; set => clues = value; }
     public string PictureName { get => pictureName; set => pictureName = value; }
-    public string EnclosureName { get => enclosureName; set => enclosureName = value; }
+    public Enclosure EnclosureName { get => enclosureName; set => enclosureName = value; }
+    public int Number { get => number; set => number = value; }
+    public int Id { get => id; set => id = value; }
 
     public bool compare(Animal animal)
     {
@@ -33,5 +72,10 @@ public class Animal
             return true;
         }
         return false;
+    }
+
+    public override string ToString()
+    {
+        return "[ Name: " + name + ", Discription:" + discription + ", Number: " + number + " ]";
     }
 }

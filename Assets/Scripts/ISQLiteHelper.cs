@@ -41,12 +41,12 @@ public class ISQLiteHelper
         }
 
 
-        public virtual IDataReader deleteDataById(int id)
+        public virtual void deleteDataById(int id)
         {
             Debug.Log("Not ywt implemented");
             throw null;
         }
-        public virtual IDataReader deleteDataByName(string Name)
+        public virtual void deleteDataByName(string Name)
         {
             Debug.Log("Not ywt implemented");
             throw null;
@@ -98,6 +98,13 @@ public class ISQLiteHelper
                 "SELECT COALESCE(MAX(id)+1, 0) FROM " + table_name;
             IDataReader reader = dbcmd.ExecuteReader();
             return reader;
+        }
+
+        public void DropTable(string tableName)
+        {
+            IDbCommand dbcmd = db_connection.CreateCommand();
+            dbcmd.CommandText = "DROP TABLE " + tableName;
+            dbcmd.ExecuteNonQuery();
         }
 
         public void close()

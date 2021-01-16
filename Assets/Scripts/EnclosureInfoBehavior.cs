@@ -39,9 +39,13 @@ public class EnclosureInfoBehavior : MonoBehaviour
             enclosurePlane.transform.localPosition = target.localPosition - new Vector3(target.localScale.x * 5 - target.localPosition.x + RADIUS, 0.001f, 0);
             
         }
+        /*
+        Enclosure enclosure = target.gameObject.GetComponent<SelectBehavior>().Enclosure;
+        setInformation(enclosure, 0);
+        */
         Debug.Log("New Position:" + enclosurePlane.transform.localPosition);
         enclosurePlane.SetActive(true);
-        Animal katta = new Animal("Katta", "KattaMaterial", "An Animal", null);
+        Animal katta = new Animal(1,"Katta", "KattaMaterial", "An Animal", 2);
         Enclosure kattaEnclosure = new Enclosure();
         kattaEnclosure.Name = "Katta Gehege";
         kattaEnclosure.Lat = 12.0;
