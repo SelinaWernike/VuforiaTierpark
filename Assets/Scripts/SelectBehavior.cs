@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DataBank;
 using System.Data;
+using Mono.Data.Sqlite;
 
 public class SelectBehavior : MonoBehaviour
 {
@@ -29,8 +30,9 @@ public class SelectBehavior : MonoBehaviour
             {
                 enclosure = EnclosureDAO.getEnclosureFromReader(data, 0);
             }
+            data.Close();
         }
-        catch (SyntaxErrorException e)
+        catch (SqliteException e)
         {
             Debug.Log("Couldn't find Enclosure: " + name + "\n " + e.StackTrace);
         }
@@ -46,16 +48,18 @@ public class SelectBehavior : MonoBehaviour
         AnimalDAO animalDAO = new AnimalDAO();
         try
         {
+            Debug.Log(id);
             IDataReader data = animalDAO.getDatabyEnclosure(id);
             while (data.Read())
             {
+                Debug.Log("Animals from Table exist ");
                 animals.Add(AnimalDAO.getAnimalFromReader(data, 0));
+                enclosure.Animals = animals.ToArray();
 
             }
-            enclosure.Animals = animals.ToArray();
 
         }
-        catch (SyntaxErrorException e)
+        catch (SqliteException e)
         {
             Debug.Log("Couldn't find Enclosure: " + name + "\n " + e.StackTrace);
 

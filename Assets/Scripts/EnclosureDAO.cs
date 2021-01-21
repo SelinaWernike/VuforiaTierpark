@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace DataBank {
         private const String KEY_LAT =  "lat";
         private const String KEY_LNG =  "lng";
         private const String KEY_DISTANCE =  "distance";
+        private CultureInfo info = CultureInfo.CreateSpecificCulture("en-US");
 
         public EnclosureDAO() : base()
         {
@@ -42,9 +44,10 @@ namespace DataBank {
                     "VALUES ( '" +
                     enclosure.Id + "', '" +
                     enclosure.Name + "', '" +
-                    enclosure.Lat + "', '" +
-                    enclosure.Lng + "', '" +
-                    enclosure.Distance + "' )";
+                    enclosure.Lat.ToString(info) + "', '" +
+                    enclosure.Lng.ToString(info) + "', '" +
+                    enclosure.Distance.ToString(info) + "' )";
+            Debug.Log("Query: " + dbcmd.CommandText);
             dbcmd.ExecuteNonQuery();
         }
 
@@ -82,7 +85,7 @@ namespace DataBank {
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + " WHERE " + KEY_NAME +
-                " = '" + Name + "' )";
+                " = '" + Name + "'";
             return dbcmd.ExecuteReader();
         }
 
@@ -91,7 +94,7 @@ namespace DataBank {
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + " WHERE " + KEY_ID +
-                " = '" + id + "' )";
+                " = '" + id + "'";
             return dbcmd.ExecuteReader();
         }
 
@@ -102,7 +105,9 @@ namespace DataBank {
 
         public static Enclosure getEnclosureFromReader(IDataReader reader, int index)
         {
-            return new Enclosure(reader[index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString(),reader[++index].ToString());
+            Enclosure enclosure = new Enclosure(reader[index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString(),reader[++index].ToString());
+            Debug.Log(enclosure);
+            return enclosure;
         }
     }
 }

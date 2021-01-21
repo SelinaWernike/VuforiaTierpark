@@ -10,6 +10,7 @@ public class MenuBehavior : MonoBehaviour
     private GameObject startButton;
     private GameObject restartButton;
     private GameObject sideMenu;
+    private ClueBehavior controller;
     private bool started = false;
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,7 @@ public class MenuBehavior : MonoBehaviour
             sideMenu = GameObject.Find("SideMenu");
             restartButton.SetActive(false);
             mainMenu.SetActive(false);
+        controller = GameObject.Find("GameHandler").GetComponent<ClueBehavior>();
         if(mainMenu == null || sideMenu == null)
         {
             throw new NullReferenceException("No Menu found");
@@ -32,15 +34,10 @@ public class MenuBehavior : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void StartGame()
     {
         GameChange(true);
+        controller.StartGame();
             
         
     }
@@ -68,6 +65,7 @@ public class MenuBehavior : MonoBehaviour
     public void EndGame()
     {
         GameChange(false);
+        controller.EndGame();
 
     }
 

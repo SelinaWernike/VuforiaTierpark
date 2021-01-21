@@ -62,7 +62,7 @@ namespace DataBank{
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + " WHERE " +
-                KEY_ID + " = '" + id + "'";
+                KEY_ID + " = " + id;
             return dbcmd.ExecuteReader();
         }
 
@@ -71,7 +71,8 @@ namespace DataBank{
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + " WHERE " +
-                KEY_ANIMAL_ID + " = '" + animal_id + "'";
+                KEY_ANIMAL_ID + " = " + animal_id;
+            Debug.Log(dbcmd.CommandText);
             return dbcmd.ExecuteReader();
         }
 
@@ -82,7 +83,11 @@ namespace DataBank{
 
         public override IDataReader getNumOfRows()
         {
-            return base.getNumOfRows(TABLE_NAME);
+            IDbCommand dbcmd = db_connection.CreateCommand();
+            dbcmd.CommandText =
+                "SELECT COALESCE(MAX(" + KEY_ID + ")+1, 0) FROM " + TABLE_NAME;
+            IDataReader reader = dbcmd.ExecuteReader();
+            return reader;
         }
 
         public static Clue writeClueFromReader(IDataReader reader)

@@ -51,11 +51,11 @@ namespace DataBank
                     animal.PictureName + "', '" +
                     animal.Discription + "', '" +
                     animal.Number + "', '" +
-                    animal.EnclosureName.Name + "' )";
+                    animal.EnclosureName.Id + "' )";
             dbcmd.ExecuteNonQuery();
         }
 
-        public void addData(Animal animal, string enclosure)
+        public void addData(Animal animal, int enclosure)
         {
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText = "INSERT INTO " + TABLE_NAME +
@@ -108,7 +108,7 @@ namespace DataBank
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + " WHERE " + KEY_ANIMAL_NAME +
-                " = '" + Name + "' )";
+                " = '" + Name + "'";
             return dbcmd.ExecuteReader();
         }
 
@@ -117,7 +117,7 @@ namespace DataBank
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + " WHERE " + KEY_ID +
-                " = '" + id + "' )";
+                " = '" + id + "'";
             return dbcmd.ExecuteReader();
         }
 
@@ -126,9 +126,19 @@ namespace DataBank
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT  " + TABLE_NAME + ".*, " + REFERENZ_TABLE + ".* FROM " + TABLE_NAME + 
-                "INNER JOIN " + REFERENZ_TABLE + " ON "+ REFERENZ_TABLE + "." + KEY_ENCLOSURE + 
-                " = " + TABLE_NAME + "." + KEY_ENCLOSURE +  " WHERE " + KEY_ID +
-                " = '" + id + "' )";
+                " INNER JOIN " + REFERENZ_TABLE + " ON "+ REFERENZ_TABLE + "." + KEY_ENCLOSURE + 
+                " = " + TABLE_NAME + "." + KEY_ENCLOSURE +  " WHERE " + TABLE_NAME + "."+ KEY_ID +
+                " = '" + id + "'";
+            return dbcmd.ExecuteReader();
+        }
+        public IDataReader getDataByNameJoin(string name)
+        {
+            IDbCommand dbcmd = getDbCommand();
+            dbcmd.CommandText =
+                "SELECT  " + TABLE_NAME + ".*, " + REFERENZ_TABLE + ".* FROM " + TABLE_NAME +
+                " INNER JOIN " + REFERENZ_TABLE + " ON " + REFERENZ_TABLE + "." + KEY_ENCLOSURE +
+                " = " + TABLE_NAME + "." + KEY_ENCLOSURE + " WHERE " + TABLE_NAME + "."+ KEY_ANIMAL_NAME +
+                " = '" + name + "'";
             return dbcmd.ExecuteReader();
         }
 
@@ -137,14 +147,34 @@ namespace DataBank
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + " WHERE " + KEY_ENCLOSURE +
-                " = '" + enclosure_id + "' )";
+                " = '" + enclosure_id + "'";
             return dbcmd.ExecuteReader();
         }
 
         public static Animal getAnimalFromReader(IDataReader reader, int index)
         {
-            return new Animal(reader[index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString());
+            Animal animal = new Animal(reader[index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString());
+            Debug.Log(animal);
+            return animal;
 
+        }
+
+        public static Animal getAnimalEnclosureFromReader(IDataReader reader, int index)
+        {
+            
+               Animal animal = new Animal(reader[index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString(), reader[++index].ToString(), EnclosureDAO.getEnclosureFromReader(reader,index + 2));
+            Debug.Log(animal);
+            return animal;
+
+        }
+
+        public override IDataReader getNumOfRows()
+        {
+            IDbCommand dbcmd = db_connection.CreateCommand();
+            dbcmd.CommandText =
+                "SELECT COALESCE(MAX("+ KEY_ID + ")+1, 0) FROM " + TABLE_NAME;
+            IDataReader reader = dbcmd.ExecuteReader();
+            return reader;
         }
     }
 }

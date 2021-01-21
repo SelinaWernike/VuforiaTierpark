@@ -9,10 +9,10 @@ public class DisplayTextBehavior : MonoBehaviour
 
     void Start()
     {
-        for(int i = 0; i <= 5; i++)
+       /* for(int i = 0; i <= 5; i++)
         {
             grid.GetComponent<GridManager>().addObject(text);
-        }
+        } */
     }
     public void addText(string text)
     {

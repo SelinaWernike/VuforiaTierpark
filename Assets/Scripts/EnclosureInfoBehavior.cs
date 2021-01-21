@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnclosureInfoBehavior : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject prefab;
     const float RADIUS = 0.05f;
     const float MAX_DISTANCE_X = 0.152f;
     const float MAX_DISTANCE_Y = 0.21226f / 2f;
@@ -13,46 +15,43 @@ public class EnclosureInfoBehavior : MonoBehaviour
     private GameObject animalPicture;
     private GameObject animalTextbox;
     private TextMesh distance;
+    private Enclosure currentEnclosure;
+    private Animal currentAnimal;
     // Start is called before the first frame update
     void Start()
     {
         enclosurePlane = GameObject.Find("EnclosurePlane");
         enclosurePlane.SetActive(false);
         Debug.Log("StartVector: " + startVector);
-
-
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void OnSelection(Transform target)
     {
-        if(Mathf.Abs(target.localPosition.y) + target.localScale.x * 5  + RADIUS < MAX_DISTANCE_X )
+       
+        Enclosure enclosure = target.gameObject.GetComponent<SelectBehavior>().Enclosure;
+        if(currentEnclosure == null || enclosure.CompareTo(currentEnclosure) == false)
         {
-            enclosurePlane.transform.localPosition =  target.localPosition + new Vector3(target.localScale.x * 5 - target.localPosition.x + RADIUS, 0.001f, 0f);
+            currentEnclosure = enclosure;
+            enclosurePlane.transform.localPosition = target.localPosition - new Vector3(target.localScale.x * 5 + RADIUS, 0, 0);
+        
+            setInformation(enclosure, 0);
+            if(enclosure.Animals != null && enclosure.Animals.Length > 0)
+            {
+                setAnimal(enclosure.Animals[0]);
+
+            } else
+            {
+                SetDefault();
+            }
+            enclosurePlane.SetActive(true);
+            
         } else
         {
-            enclosurePlane.transform.localPosition = target.localPosition - new Vector3(target.localScale.x * 5 - target.localPosition.x + RADIUS, 0.001f, 0);
-            
+            enclosurePlane.SetActive(false);
+            currentEnclosure = null;
         }
-        /*
-        Enclosure enclosure = target.gameObject.GetComponent<SelectBehavior>().Enclosure;
-        setInformation(enclosure, 0);
-        */
-        Debug.Log("New Position:" + enclosurePlane.transform.localPosition);
-        enclosurePlane.SetActive(true);
-        Animal katta = new Animal(1,"Katta", "KattaMaterial", "An Animal", 2);
-        Enclosure kattaEnclosure = new Enclosure();
-        kattaEnclosure.Name = "Katta Gehege";
-        kattaEnclosure.Lat = 12.0;
-        kattaEnclosure.Lng = 45.0;
-        Animal[] array = new Animal[] { katta };
-        kattaEnclosure.Animals = array;
-        setInformation(kattaEnclosure, 0);
+        
+        
     }
 
     public void OnDeselection()
@@ -62,6 +61,7 @@ public class EnclosureInfoBehavior : MonoBehaviour
 
     public void setInformation(Enclosure enclosure, int index)
     {
+       
         if(animalPicture == null || enclosureName == null || animalTextbox == null || distance == null)
         {
          animalPicture = enclosurePlane.transform.Find("AnimalPicture").gameObject;
@@ -70,16 +70,64 @@ public class EnclosureInfoBehavior : MonoBehaviour
          distance = enclosurePlane.transform.Find("Distance").gameObject.GetComponent<TextMesh>();
 
         }
-
-
-        MeshRenderer renderer = animalPicture.GetComponent<MeshRenderer>();
-        renderer.material = enclosure.Animals[index].Picture;
         enclosureName.text =  enclosure.Name;
         distance.text = "Lat: " + enclosure.Lat + " Lnt: " + enclosure.Lng;
-        // Add Something for every Animal
+        GridManager grid =  enclosurePlane.transform.Find("AnimalTextbox").gameObject.GetComponent<GridManager>();
+        grid.deleteAll();
+        
+        if(enclosure.Animals != null)
+        {
+
+            foreach(Animal animal in enclosure.Animals) {
+
+                GameObject animalBtn = Instantiate(prefab, Vector3.zero, Quaternion.identity,animalTextbox.transform);
+                AnimalBtnBehavior btn = animalBtn.GetComponent<AnimalBtnBehavior>();
+                btn.Animal = animal;
+                btn.EnclosureInfo = this;
+                GameObject textChild = animalBtn.transform.GetChild(0).gameObject;
+                TextMesh text = textChild.GetComponent<TextMesh>();
+                text.text = animal.Name;
+                if(grid)
+                {
+                    Debug.Log("Found grid Object");
+                    grid.addObject(animalBtn);
+                }
+            }
+        } else
+            {
+                SetDefault();
+            }
+        
 
 
     }
 
+    public void setAnimal(Animal animal)
+    {
+        if (animalPicture == null)
+        {
+            animalPicture = enclosurePlane.transform.Find("AnimalPicture").gameObject;
+
+        }
+        if(animal.Picture != null)
+        {
+            MeshRenderer renderer = animalPicture.GetComponent<MeshRenderer>();
+            renderer.material = animal.Picture;
+        }
+        currentAnimal = animal;
+        
+        
+    }
+
+    public void SetDefault()
+    {
+        if (animalPicture == null)
+        {
+            animalPicture = enclosurePlane.transform.Find("AnimalPicture").gameObject;
+        }
+        MeshRenderer renderer = animalPicture.GetComponent<MeshRenderer>();
+        renderer.material = Resources.Load<Material>("DefaultAMaterial");
+        currentAnimal = null;
+    }
     
 }

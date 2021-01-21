@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="Eisbaer" size="0.150000 0.107069" />
+    <ImageTarget name="Waldbison" size="0.150000 0.100086" />
+    <ImageTarget name="Sumatra_Tiger" size="0.150000 0.092691" />
+    <ImageTarget name="Vikunja" size="0.150000 0.101791" />
+    <ImageTarget name="Dschelada" size="0.150000 0.092669" />
     <ImageTarget name="TierparkKarteGross" size="1.750000 1.275564" />
     <ImageTarget name="minimap" size="0.100000 0.143021" />
     <ImageTarget name="katta" size="0.150000 0.100086" />

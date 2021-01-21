@@ -18,6 +18,7 @@ public class Animal
     {
         this.id = id;
         this.Name = name;
+        this.PictureName = pictureName;
         this.Picture = Resources.Load<Material>(pictureName);
         this.Discription = discription;
         this.number = number;
@@ -39,9 +40,9 @@ public class Animal
     {
         this.id = Int32.Parse(id);
         this.name = name;
+        this.pictureName = pictureName;
         this.Picture = Resources.Load<Material>(pictureName);
         this.discription = discription;
-        this.pictureName = pictureName;
         this.number = Int32.Parse(number);
         this.enclosureName = enclosure;
     }
@@ -50,9 +51,9 @@ public class Animal
     {
         this.id = Int32.Parse(id);
         this.name = name;
-        this.Picture = Resources.Load<Material>(pictureName);
-        this.discription = discription;
         this.pictureName = pictureName;
+        this.picture = Resources.Load<Material>(pictureName);
+        this.discription = discription;
         this.number = Int32.Parse(number);
     }
 
@@ -76,6 +77,12 @@ public class Animal
 
     public override string ToString()
     {
-        return "[ Name: " + name + ", Discription:" + discription + ", Number: " + number + " ]";
+        string output = "[ Name: " + name + ", Picture:"+ pictureName + ", Discription:" + discription + ", Number: " + number + " ]";
+        if(enclosureName != null)
+        {
+            output = output + enclosureName.ToString();
+        }
+        return output;
+            
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace DataBank {
         private const String KEY_DISTANCE = "distance";
         private const String KEY_LAT = "lat";
         private const String KEY_LNG = "lng";
+        private CultureInfo info = CultureInfo.CreateSpecificCulture("en-US");
+
 
         public EventDAO() : base()
         {
@@ -23,10 +26,10 @@ namespace DataBank {
             dbcmd.CommandText = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ( " +
                     KEY_ID + " INT PRIMARY KEY, " +
                     KEY_NAME + " TEXT NOT NULL, " +
-                    KEY_TIME + " DATETIME NOT NULL," +
+                    KEY_TIME + " TEXT NOT NULL," +
+                    KEY_DISTANCE + " DOUBLE, " +
                     KEY_LAT + " DOUBLE, " +
-                    KEY_LNG + " DOUBLE, " +
-                    KEY_DISTANCE + " DOUBLE )";
+                    KEY_LNG + " DOUBLE )";
             dbcmd.ExecuteNonQuery();
         }
 
@@ -38,16 +41,16 @@ namespace DataBank {
                     KEY_ID + ", " +
                     KEY_NAME + ", " +
                     KEY_TIME + ", " +
-                    KEY_LAT + ",  " +
-                    KEY_LNG + ", " +
-                    KEY_DISTANCE + " )" +
+                    KEY_DISTANCE + ",  " +
+                    KEY_LAT + ", " +
+                    KEY_LNG + " )" +
                     "VALUES ( '" +
                     ev.Id + "', '" +
                     ev.Name + "', '" +
-                    ev.Time.ToString("yyyy-MM-dd HH:m:ss") + "', '" +
-                    ev.Lat + "', '" +
-                    ev.Lng + "', '" +
-                    ev.Distance + "' )";
+                    ev.Time.ToString("HH:mm:ss.f") + "', '" +
+                    ev.Distance.ToString(info) + "', '" +
+                    ev.Lat.ToString(info) + "', '" +
+                    ev.Lng.ToString(info) + "' )";
             dbcmd.ExecuteNonQuery();
         }
 
@@ -75,7 +78,7 @@ namespace DataBank {
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + "WHERE " + KEY_ID +
-                " = '" + id + "' )";
+                " = '" + id + "' ORDER BY " + KEY_TIME;
             return dbcmd.ExecuteReader();
         }
 
@@ -84,7 +87,7 @@ namespace DataBank {
             IDbCommand dbcmd = getDbCommand();
             dbcmd.CommandText =
                 "SELECT * FROM " + TABLE_NAME + "WHERE " + KEY_NAME +
-                " = '" + Name + "' )";
+                " = '" + Name + "' ORDER BY " + KEY_TIME;
             return dbcmd.ExecuteReader();
         }
 

@@ -55,4 +55,8 @@ public class Enclosure
     {
         return "[ Name: " + name + ", Lat: " + lat + ", Lng: " + lng  + " ]";
     }
+
+    public bool CompareTo(Enclosure enclosure) {
+        return this.id == enclosure.id;
+    }
 }
