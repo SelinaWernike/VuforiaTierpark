@@ -14,11 +14,17 @@ public class SelectManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) || Input.touchCount > 0 )
         {
+            int layerMask = 1 << 8;
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if(Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                ray = Camera.main.ScreenPointToRay(touch.position);
+            }
         RaycastHit hit;
-            if(Physics.Raycast(ray, out hit))
+            if(Physics.Raycast(ray, out hit,layerMask))
             {
                 var selection = hit.transform.gameObject;
                 if(selection.CompareTag(selectTag))
